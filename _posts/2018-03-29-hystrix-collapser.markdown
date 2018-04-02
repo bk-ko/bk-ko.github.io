@@ -3,6 +3,7 @@ layout: post
 title:  "Hystrix Collapser"
 date:   2018-03-29 12:31:01 +0900
 categories: jekyll update
+comments: true
 ---
 # Hystrix Collapser Sample [link](https://github.com/bk-ko/collapser-sample)
 
@@ -38,4 +39,5 @@ public Product getProductById(Long id) {
 #### HystrixProperty [link](https://github.com/Netflix/Hystrix/blob/68251383aa6ca0842ab5597fcf2f26c5a5b77aba/hystrix-core/src/main/java/com/netflix/hystrix/HystrixCollapserProperties.java#L32)
   -  `timerDelayInMilliseconds` :  collpase request within this duration
   -  `maxRequestsInBatch` : max request count per collaping
+
 
