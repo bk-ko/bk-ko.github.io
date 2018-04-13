@@ -5,13 +5,13 @@ date:   2018-04-12 12:31:01 +0900
 categories: jekyll update
 comments: true
 ---
-# Event Sourcing Basic Sample [link](https://github.com/bk-ko/eventsourcing-basic) 
+# Event Sourcing Basic Sample : [link](https://github.com/bk-ko/eventsourcing-basic) 
 
 - [12 Things You Should Know About Event Sourcing](http://blog.leifbattermann.de/2017/04/21/12-things-you-should-know-about-event-sourcing/)
 - [event-sourcing-in-practice](http://ookami86.github.io/event-sourcing-in-practice/)
 
 **Eventsourcing** 에 대해 많은 글 들을 읽었지만  
-뭔가 많이 아쉬웠는데 위의 두 article을 읽고 sample을 만들어 보았다.
+뭔가 많이 아쉬웠는데 위의 두 article 을 읽고 sample 을 만들어 보았다.
 구현 하면서 느낀 부분들은
 
 - **EventSourcing 과 Command Sourcing 의 차이점**
@@ -20,7 +20,7 @@ comments: true
 - **자연스러운 CQRS**
 
 Microservices 나 Event Driven Architecture 에서 주로 언급되다 보니,  
-생각이 장황해져서 계좌(account) 생성, 입금(deposit), 출금(withdraw) 라는 아주 간단한 예제로 구현해봤다.
+생각이 장황해져서 계좌(account) 생성, 입금(deposit), 출금(withdraw)이 라는 아주 간단한 예제로 구현해봤다.
 
 ## *apply* function
 
@@ -29,7 +29,7 @@ Microservices 나 Event Driven Architecture 에서 주로 언급되다 보니,
 event sourcing에서 가장 중요한 function 이라고 본다.
 ***event 를 적용한다*** 로 생각하면 간단하지만, 실제로는 생각해야 될게 많다.
 eventsourcing 은 immutable 한 event 들을 통해서 하나의 aggregate 를 얻어내는 것이기 때문에 aggregate 를 조회 할때 마다 state 의 변경(transition) 만 일어나야지,  
-event 의 action 마저 발생해서는 안되기 때문에 조심해야 한다. ( sideeffect , mail 발송을 생각하면 쉽다.)
+event 의 action 마저 발생해서는 안되기 때문에 조심해야 한다. ( side effect , mail 발송을 생각하면 쉽다.)
 
 ``` java
 public Account apply(Account account, AccountEvent event) {
@@ -50,7 +50,7 @@ public Account apply(Account account, AccountEvent event) {
 
 ## *replay* & *snapshot*
 update 완료된 상태의 aggregate 를 조회하는 data sourcing 과 달리 eventsourcing 은 event 로부터 현재 상태를 조회해오므로 replay 는 필수 이다.  
-sideeffect 없는 replay 는 얼마든지 상관 없다지만,  event 갯수가 엄청나게 많다면 snapshot 이 꼭 필요하다.  
+side effect 없는 replay 는 얼마든지 상관 없다지만,  event 갯수가 엄청나게 많다면 snapshot 이 꼭 필요하다.  
 성능면에서도 예를 들면, 아무리 많은 event 가 발생하더라도 매 5번의 event 마다 snapshot 을 찍으면 최대 5개의 event 조회만으로 충분히 aggregate 를 구할수 있다.
 
 ``` java
@@ -98,7 +98,7 @@ public class AccountController {
 ```
 
 좀 현실적인 그림으로 골라봤다.
-![Alt text](https://monosnap.com/image/TKYQ47DHJFaswZIqtdc01Y1dyiYALa.png)
+![cqrs](https://monosnap.com/image/TKYQ47DHJFaswZIqtdc01Y1dyiYALa.png)
 
 ## 느낀점
 보통 이야기하는 event sourcing 의 장점은
@@ -117,8 +117,8 @@ kafka 와 같은 disk 저장이 되는 Message queue 와 너무 어울리는 것
 
 무조건 적용하기 보다는 영리하게 사용하면 좋을것 같다, 
 
-> **[Spring Statemachine]**(https://projects.spring.io/spring-statemachine/) 
-> Microservice 에서 saga와 같이 state 관리를 위해서 많이 언급되는데,
+> **[Spring Statemachine](https://projects.spring.io/spring-statemachine/)**  
+> Microservices 에서 saga와 같이 state 관리를 위해서 많이 언급되는데,
 > statemachine을 매번 조회 하는게 너무 무겁다는 생각이 들었고, 본연의 복잡함(?) 때문에 성능도 안나왔던 기억이... 
 
 ### 참고
