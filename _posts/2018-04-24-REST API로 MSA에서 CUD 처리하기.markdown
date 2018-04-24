@@ -144,9 +144,8 @@ Caller가 끝내 보상 API 정상 응답을 못받은경우 후처리를 통해
 
 ## 참고자료
 - [Microservice Trade-Offs / martinfowler](https://martinfowler.com/articles/microservice-trade-offs.html#consistency)
-- https://codeahoy.com/2017/08/11/caching-strategies-and-how-to-choose-the-right-one/ 
-- http://restcookbook.com/HTTP%20Methods/idempotency/  
-- https://wiki.openstack.org/wiki/Support-retry-with-idempotency  
-- https://hackernoon.com/idempotency-apis-and-retries-34b161f64cb4  
-- https://tools.ietf.org/html/rfc7231#section-4.2.3  
-  - POST 를 Cache 할수 있다는 RFC 문서, 중복 호출의 경우에도 POST & Cache로 응답가능
+- [caching-strategies-and-how-to-choose-the-right-one](https://codeahoy.com/2017/08/11/caching-strategies-and-how-to-choose-the-right-one/) 
+- [restcookbook-idempotency](http://restcookbook.com/HTTP%20Methods/idempotency/)
+- [Support-retry-with-idempotency](https://wiki.openstack.org/wiki/Support-retry-with-idempotency)  
+- [idempotency-apis-and-retries](https://hackernoon.com/idempotency-apis-and-retries-34b161f64cb4) 
+- [POST,Cache - RFC](https://tools.ietf.org/html/rfc7231#section-4.2.3) 
