@@ -47,6 +47,7 @@ EDA의 장바구니 삭제 의 경우 이방식으로 개발 되어 있습니다
 
 ### 쿼리 수행이 한번만 되어야 되는 경우
 ![Alt text](https://monosnap.com/image/3I7LXzZGfjljhT9Yj9KUfkqtnDphPz.png)
+
 단순한 Update, Delete 가 아닌경우, Insert 와 같이 중복실행을 허용하지 않는 경우에는
 Service Layer에서 기존 처리 여부를 확인후 저장하고 (메인 비지니스 로직과 같은 트랜잭션에서) 재요청시 이미 처리했으면 바로 정상응답하고 그렇지 않은경우에만 해당 요청을 처리 하는방식입니다.
 
@@ -64,6 +65,7 @@ Service Layer에서 기존 처리 여부를 확인후 저장하고 (메인 비�
 
 ## POST + Cache 조합으로 호출
 ![Alt text](https://monosnap.com/image/Ke5OfWHqEi0C0rkWSNtSecHY3sq833.png)
+
 위의 구현과 비슷하지만 POST, Cache 를 사용하는 방법입니다.
 
 POST는 Cache 할수 있는 Http Method입니다.
@@ -86,6 +88,7 @@ Caller에서 요청을 처리후 결과가 Server의 Cache에 저장 되는 방�
 
 ## Long Transaction에서의 처리 (보상 API호출)
 ![Alt text](https://monosnap.com/image/zKfRQNvbaAx5t6Hdh1a2c8fmx55duw.png)
+
 멱등성 있게 API를 호출하는 일과 더불어,동시에 여러가지 일들이 일어나는 긴 Caller 트랜잭션의 가운데에 REST 요청이 일어나는 경우 입니다.
 
 예를 들면 상품등록 같은 경우입니다. (상품등록, 이미지등록, 쿠폰등록, 등 여러가지 일들이 동시에 일어나는경우)
