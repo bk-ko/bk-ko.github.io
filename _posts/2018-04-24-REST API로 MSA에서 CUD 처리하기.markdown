@@ -20,11 +20,11 @@ MSA에서 멱등성 있게 API 호출하는 방법을 알아봤습니다.
 
   - "Eventually Consistent" 하고, 이마저도 후처리(수작업 포함)가 없으면 데이터가 틀릴수도 있습니다...
 
-  - 참고 : Microservice Trade-Offs / martinfowler
 
-- MSA에서의 Transaction 은 기존에 비해 고비용이므로 이걸 구현하는게 맞는지, 에러율과 서비스 중요도에 따라 판단하고, 모니터링과 후처리 로 빨리 Error를 드러내고 처리 하도록 해야합니다. 이미 11PAY 결제도 REST 호출로 이루어 지고 있습니다.
+- MSA에서의 Transaction 은 기존에 비해 고비용이므로 이걸 구현하는게 맞는지, 에러율과 서비스 중요도에 따라 판단하고, 모니터링과 후처리 로 빨리 Error를 드러내고 처리 하도록 해야합니다. 
+  - 이미 결제도 REST 호출로 이루어 지고 있습니다.
 
-  - 기본적으로 CUD API 구현시에는 중복호출에 대한 방어로직이 추가되어 있어야 함을 인지 하셔야 합니다.
+- 기본적으로 CUD API 구현시에는 중복호출에 대한 방어로직이 추가되어 있어야 함을 인지 하셔야 합니다.
 
 ## PUT 으로 호출
 
@@ -43,6 +43,7 @@ EDA의 장바구니 삭제 의 경우 이방식으로 개발 되어 있습니다
 > **Server가 할일**
 > - 쿼리가 중복 수행되어도 문제 없는지 확인 (updated_time 필드)
 
+---
 
 ### 쿼리 수행이 한번만 되어야 되는 경우
 ![Alt text](https://monosnap.com/image/3I7LXzZGfjljhT9Yj9KUfkqtnDphPz.png)
@@ -59,13 +60,15 @@ Service Layer에서 기존 처리 여부를 확인후 저장하고 (메인 비�
 > - 해당 Request에 대한 처리여부를 비지니스처리와 함께 저장해야함 (같은 Transaction) 
 >   - 다음번 동일 요청이 왔을때 이미 처리된 요청 인지 체크하는 기능 구현 필요 중복 요청이라고 판단되면 재처리 하지 않고 바로 200 응답
 
+---
+
 ## POST + Cache 조합으로 호출
 ![Alt text](https://monosnap.com/image/Ke5OfWHqEi0C0rkWSNtSecHY3sq833.png)
 위의 구현과 비슷하지만 POST, Cache 를 사용하는 방법입니다.
 
 POST는 Cache 할수 있는 Http Method입니다.
 
-약간 다르지만 Write Through Cache 를 생각하시면 됩니다. https://codeahoy.com/2017/08/11/caching-strategies-and-ho w-to-choose-the-right-one/
+약간 다르지만 Write Through Cache 를 생각하시면 됩니다. 
 
 Caller에서 요청을 처리후 결과가 Server의 Cache에 저장 되는 방식입니다 다만 Global Cache 가 구현되어 있어야만 가능하다는 전제가 있습니다. 보상처리 구현시 Cache Eviction 기능을 구현해야 합니다.
 
@@ -78,7 +81,7 @@ Caller에서 요청을 처리후 결과가 Server의 Cache에 저장 되는 방�
 > - 해당 Request에 대한 처리여부를 비지니스처리와 함께 Global Cache 에 저장해야함 (같은 Transaction) 다음번 동일 요청이 왔을때 Cache 된 값을 반환
 
 
-
+---
 
 
 ## Long Transaction에서의 처리 (보상 API호출)
@@ -114,27 +117,36 @@ Caller가 끝내 보상 API 정상 응답을 못받은경우 후처리를 통해
 >  - 배치로 돌면서 후처리 대상을 조회, 보상 API를 호출하도록 구현해야 합니다.
 >  - 추가 작업이 필요한 건수, 에러 빈도를 고려해서 도입을 결정해야 합니다.
 
+
+---
+
+
 ## FAQ
 
 ***Caller가 보상 API 호출도 못하고 Down되면 어떻게 해야 하나요?***
 
-Caller의 로직에서 중간에 보상 API호출 하지도 못하고 끝나버리는경우 이런 케이스 마저 방지하고 싶은경우, Caller 는 정상종료 되었음 을 알려주는 Confirm API 구현이 필요합니다. 이마저도 실패할경우는 후처리 배치가 처리하도록 합니다.
+- Caller의 로직에서 중간에 보상 API호출 하지도 못하고 끝나버리는경우 이런 케이스 마저 방지하고 싶은경우, Caller 는 정상종료 되었음 을 알려주는 Confirm API 구현이 필요합니다. 이마저도 실패할경우는 후처리 배치가 처리하도록 합니다.
 
-최종적인 API 호출이 실패(요청처리 실패, 네트워크 이슈) 하는 경우 역시 가능합니다. 꼭 필요한지..
+- 최종적인 API 호출이 실패(요청처리 실패, 네트워크 이슈) 하는 경우 역시 가능합니다. 꼭 필요한지..
+
 
 ***만약 REST Call이 Caller 로직의 맨마지막에 실행된다면 보상 API는 필요 한가요***
 
-긴 트랜잭션에서 맨마지막에 REST Call이 위치한다면 별도의 보상 API 호출은 필요 없다고 봅니다. 다만 더 확실하게 하려면 후처리 배치는 필요합니다.
-
-(Caller는 Throw 했지만, Server만 성공으로 알고 있는경우 처리를 위해...)
-
-역시 각 API의 호출 빈도와 오류 상황으로 판단이 필요합니다.
+- 긴 트랜잭션에서 맨마지막에 REST Call이 위치한다면 별도의 보상 API 호출은 필요 없다고 봅니다. 다만 더 확실하게 하려면 후처리 배치는 필요합니다.
+  - (Caller는 Throw 했지만, Server만 성공으로 알고 있는경우 처리를 위해...)
+- 역시 각 API의 호출 빈도와 오류 상황으로 판단이 필요합니다.
 
 ***만약 응답시간이 10초 이상 걸리는 REST호출의 경우는 어떻게 해야하나요***
 
-Caller의 비지니스에 따라 구현이 달라질것 같습니다.
+- Caller의 비지니스에 따라 구현이 달라질것 같습니다.
 예를 들면, 비동기 처리후 3초마다 처리 완료 확인 API 반복호출 (4회) + timeout 으로 판단 내린다던지...
 
-## 참고자료
 
-http://restcookbook.com/HTTP%20Methods/idempotency/ https://wiki.openstack.org/wiki/Support-retry-with-idempotency https://hackernoon.com/idempotency-apis-and-retries-34b161f64cb4 https://tools.ietf.org/html/rfc7231#section-4.2.3 POST 를 Cache 할수 있다는 RFC 문서, 중복 호출의 경우에도 POST Cache로 응답가능
+## 참고자료
+- [Microservice Trade-Offs / martinfowler](https://martinfowler.com/articles/microservice-trade-offs.html#consistency)
+- https://codeahoy.com/2017/08/11/caching-strategies-and-how-to-choose-the-right-one/ 
+- http://restcookbook.com/HTTP%20Methods/idempotency/  
+- https://wiki.openstack.org/wiki/Support-retry-with-idempotency  
+- https://hackernoon.com/idempotency-apis-and-retries-34b161f64cb4  
+- https://tools.ietf.org/html/rfc7231#section-4.2.3  
+  - POST 를 Cache 할수 있다는 RFC 문서, 중복 호출의 경우에도 POST & Cache로 응답가능
