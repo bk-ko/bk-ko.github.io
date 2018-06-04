@@ -1,11 +1,14 @@
 ---
 layout: post
-title:  "Event Sourcing Basic"
-date:   2018-04-12 12:31:01 +0900
-categories: jekyll update
+title: "Event Sourcing Basic"
+description: "Event Sourcing 의 작동방식을 생각해봤습니다."
+date: 2018-04-12
+tags: [Eventsourcing,sample]
 comments: true
+share: true
 ---
-# Event Sourcing Basic Sample : [link](https://github.com/bk-ko/eventsourcing-basic) 
+
+> [> source link](https://github.com/bk-ko/eventsourcing-basic) 
 
 - [12 Things You Should Know About Event Sourcing](http://blog.leifbattermann.de/2017/04/21/12-things-you-should-know-about-event-sourcing/)
 - [event-sourcing-in-practice](http://ookami86.github.io/event-sourcing-in-practice/)
