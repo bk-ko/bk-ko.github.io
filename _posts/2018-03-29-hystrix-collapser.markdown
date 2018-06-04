@@ -1,11 +1,13 @@
 ---
 layout: post
-title:  "Hystrix Collapser"
-date:   2018-03-29 12:31:01 +0900
-categories: jekyll update
+title: "Hystrix Collapser"
+description: "Hystrix Collapser with sample source"
+date:  2018-03-29
+tags: [msa, rest, sample]
 comments: true
+share: true
 ---
-# Hystrix Collapser Sample [link](https://github.com/bk-ko/collapser-sample)
+> [> source link](https://github.com/bk-ko/collapser-sample)
 
 This Repository is a sample application using HystrixCollpaser and Spring Boot JPA.
 

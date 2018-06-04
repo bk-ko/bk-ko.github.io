@@ -1,12 +1,12 @@
 ---
 layout: post
-title:  "REST API로 MSA에서 CUD 처리하기"
-date:   2018-04-24 20:31:01 +0900
-categories: jekyll update
+title: "REST API로 MSA에서 CUD 처리하기"
+description: "MSA에서 REST로 CUD를 처리하는 방법들입니다."
+date:  2018-04-24
+tags: [msa, rest,concept]
 comments: true
+share: true
 ---
-# REST API로 MSA에서 CUD 처리하기
-
 
 ## 개요
 
